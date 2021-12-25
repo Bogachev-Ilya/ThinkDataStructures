@@ -44,8 +44,14 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public boolean add(T element) {
-		// TODO: FILL THIS IN!
-		return false;
+		if (size >= array.length) {
+			T[] bigger = (T[]) new Object[array.length * 2];
+			System.arraycopy(array, 0, bigger, 0, array.length);
+			array = bigger;
+		}
+		array[size] = element;
+		size++;
+		return true;
 	}
 
 	@Override
@@ -110,7 +116,15 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public int indexOf(Object target) {
-		// TODO: FILL THIS IN!
+		if (target == null) {
+			for (int i = 0; i < size; i++)
+				if (array[i]==null)
+					return i;
+		} else {
+			for (int i = 0; i < size; i++)
+				if (target.equals(array[i]))
+					return i;
+		}
 		return -1;
 	}
 
@@ -182,7 +196,17 @@ public class MyArrayList<T> implements List<T> {
 	@Override
 	public T remove(int index) {
 		// TODO: FILL THIS IN!
-		return null;
+		if (index >=size) {
+			throw new IndexOutOfBoundsException();
+		}
+		T valueToRemove = array[index];
+		int numMoved = size - index - 1;
+		if (numMoved > 0)
+			System.arraycopy(array, index+1, array, index,
+					numMoved);
+		array[--size] = null; // clear to let GC do its work
+
+		return valueToRemove;
 	}
 
 	@Override
@@ -202,7 +226,12 @@ public class MyArrayList<T> implements List<T> {
 	@Override
 	public T set(int index, T element) {
 		// TODO: FILL THIS IN!
-		return null;
+		if (index>=size) {
+			throw new IndexOutOfBoundsException();
+		}
+		T oldValue = array[index];
+		array[index] = element;
+		return oldValue;
 	}
 
 	@Override
